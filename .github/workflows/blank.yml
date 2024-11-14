@@ -1,5 +1,5 @@
 #Nombre del workflow
-name: CI
+name: Trabajin
 
 #Eventos en los que se ejecutara.
 on:
