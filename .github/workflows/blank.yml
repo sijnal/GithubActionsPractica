@@ -1,6 +1,6 @@
 #Nombre del workflow
 name: Trabajin
-
+run-name: workflow iniciado por @${{ github.actor }}
 #Eventos en los que se ejecutara.
 on:
   push:
@@ -27,6 +27,7 @@ jobs:
         run: echo 'Hola mundo'
       
       - name: 'Mostrando mi variables de entorno'
+        if: ${{ env.plataform == 'azure' }}
         run: |
           echo 'Plataform: ${{ env.plataform }}'
           echo 'Region: ${{ env.region }}'
