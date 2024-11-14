@@ -1,6 +1,6 @@
 #Nombre del workflow
 name: Trabajin
-
+run-name: workflow iniciado por @${{ github.actor }}
 #Eventos en los que se ejecutara.
 on:
   push:
