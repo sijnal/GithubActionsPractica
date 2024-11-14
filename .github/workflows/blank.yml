@@ -27,9 +27,13 @@ jobs:
         run: echo 'Hola mundo'
       
       - name: 'Mostrando mi variables de entorno'
-        if: ${{ env.plataform == 'azure' }}
+        if: ${{ env.plataform == 'aws' }}
+        env:
+          TEXT: ${{ secrets.MY_SECRET }}
         run: |
           echo 'Plataform: ${{ env.plataform }}'
           echo 'Region: ${{ env.region }}'
           echo 'Account: ${{ env.account }}'
+          echo 'mi variables secreta: ${{ env.TEXT }}'
+          echo 'mi variable: ${{ env.MY_VARIABLE }}'
       
