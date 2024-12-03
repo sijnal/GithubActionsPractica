@@ -6,6 +6,9 @@ on:
     branches:
       - testing  
 
+permissions:
+  contents: write  # Permite que el bot haga push y otras acciones de escritura en el repositorio
+
 jobs:
   generate-pr-description:
     runs-on: ubuntu-latest
@@ -24,5 +27,36 @@ jobs:
           body: |
             Jean revisa esto pe.
           reviewers: jemjaf
+
+      # Paso 3: Añadir comentarios automáticos al Pull Request
+      - name: Comentar el Pull Request
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: pullRequests } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `testing`
+            });
+
+            if (pullRequests.length > 0) {
+              const prNumber = pullRequests[0].number;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: "Veamos donde va esto."
+              });
+            }
+
+      # Paso 4: Hacer el push a la rama 'testing'
+      - name: Push changes to 'testing' branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push origin testing
 
       
