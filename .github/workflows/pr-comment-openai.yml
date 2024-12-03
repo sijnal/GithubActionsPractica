@@ -1,0 +1,33 @@
+name: PR Comment with OpenAI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install openai
+          python --version
+
+      - name: Probar script de Python
+        run: |
+            echo 'print("Hola, mundo desde GitHub Actions")' > test.py
+            python test.py
+  
+      - name: Limpiar archivo de prueba
+        run: |
+          rm test.py
+
+      
