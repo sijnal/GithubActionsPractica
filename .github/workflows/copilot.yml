@@ -1,4 +1,4 @@
-name: Asignar el pull requests a Copilot
+name: Asignar el pull requests a un usuario
 run-name: workflow iniciado por @${{ github.actor }}
 
 on:
@@ -25,25 +25,4 @@ jobs:
             Jean revisa esto pe.
           reviewers: jemjaf
 
-      # Paso 3: Añadir comentarios automáticos
-      - name: Comentar el Pull Request
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { data: pullRequests } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              head: `testing`
-            });
-
-            if (pullRequests.length > 0) {
-              const prNumber = pullRequests[0].number;
-
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: "Veamos donde va esto."
-              });
-            }
+      
