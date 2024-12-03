@@ -20,10 +20,9 @@ jobs:
 
       # Paso 2: Crear un Pull Request si no existe
       - name: Creación del Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          base: main
-          branch: testing
+          branch: main
           title: "Automatización del Pull Request - testing"
           body: |
             Jean revisa esto pe.
