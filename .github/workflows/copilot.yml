@@ -7,7 +7,8 @@ on:
       - testing  
 
 permissions:
-  contents: write  # Permite que el bot haga push y otras acciones de escritura en el repositorio
+  contents: write  # Permite que el bot haga push y otras acciones de escritura en el repositorio}
+  pull-requests: write
 
 jobs:
   generate-pr-description:
@@ -50,13 +51,5 @@ jobs:
                 body: "Veamos donde va esto."
               });
             }
-
-      # Paso 4: Hacer el push a la rama 'testing'
-      - name: Push changes to 'testing' branch
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push origin testing
 
       
