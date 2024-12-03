@@ -35,5 +35,5 @@ jobs:
           echo 'Region: ${{ env.region }}'
           echo 'Account: ${{ env.account }}'
           echo 'mi variables secreta: ${{ env.TEXT }}'
-          echo 'mi variable: ${{ env.MY_VARIABLE }}'
+          echo 'mi variable: ${{ vars.MY_VARIABLE }}'
       
