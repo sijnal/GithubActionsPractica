@@ -1,0 +1,48 @@
+name: Asignar el pull requests a Copilot
+run-name: workflow iniciado por @${{ github.actor }}
+on:
+  push:
+    branches:
+      - testing  
+
+jobs:
+  generate-pr-description:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Configurar el repositorio
+      - name: Verficar Codigo 
+        uses: actions/checkout@v4
+
+      # Paso 2: Crear un Pull Request si no existe
+      - name: Cración del Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: ${{ github.ref_name }}
+          title: "Automatización del Pull Request - ${{ github.ref_name }}"
+          body: |
+            Jean revisa esto pe.
+          reviewers: |
+            jemjaf
+
+      # Paso 3: Añadir comentarios automáticos
+      - name: Comentar el Pull Request
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${{ github.actor }}:${{ github.ref_name }}`
+            });
+
+            if (pullRequest.length > 0) {
+              const prNumber = pullRequest[0].number;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: "Veamos donde va esto."
+              });
+            }
