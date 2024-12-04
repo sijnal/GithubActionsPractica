@@ -23,12 +23,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install openai 
+          pip install requests
           pip install PyGithub
 
       - name: Generate PR review with OpenAI
         env:
           MY_TOKEN: ${{ secrets.MY_TOKEN }}
+          GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
+          GOOGLE_AI_API_URL: ${{ secrets.GOOGLE_AI_API_URL }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
