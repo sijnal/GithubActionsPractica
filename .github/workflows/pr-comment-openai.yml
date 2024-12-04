@@ -1,4 +1,5 @@
 name: PR Comment with OpenAI
+run-name: ${{ github.actor }} está ejecutando este workflow
 
 on:
   pull_request:
@@ -31,30 +32,5 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-            run: |
-            python - <<EOF
-            import os
-            from github import Github
-
-            # Configuración del cliente de GitHub
-            token = os.getenv("MY_TOKEN")
-            repo_name = os.getenv("GITHUB_REPOSITORY")
-            pr_number = int(os.getenv("PR_NUMBER"))
-
-            g = Github(token)
-            repo = g.get_repo(repo_name)
-            pr = repo.get_pull(pr_number)
-
-            # Obtener los archivos cambiados
-            files = pr.get_files()
-            changed_files = [file.filename for file in files]
-
-            # Generar comentario
-            comment = f"Los archivos modificados en este PR son:\n" + "\n".join(changed_files)
-
-            # Publicar el comentario
-            pr.create_issue_comment(comment)
-            print("Comentario publicado exitosamente.")
-            EOF
-          
+          python pr_review.py
       
