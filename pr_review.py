@@ -45,9 +45,9 @@ for file in files:
 
     # Resumir cambios
     if added_lines:
-        comments.append(f"  - **Líneas añadidas:**\n    " + "\n    ".join(added_lines[:]))
+        comments.append(f"  - **Líneas añadidas:**\n\n    " + "\n    ".join(added_lines[:]) + "\n")
     if removed_lines:
-        comments.append(f"  - **Líneas eliminadas:**\n    " + "\n    ".join(removed_lines[:]))
+        comments.append(f"  - **Líneas eliminadas:**\n\n    " + "\n    ".join(removed_lines[:]) + "\n")
 
 # Publicar el comentario en el PR
 final_comment = "\n".join(comments)
