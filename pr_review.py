@@ -7,12 +7,12 @@ from github import Github
 #openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Configuración de GitHub
-GITHUB_TOKEN = os.getenv("MY_TOKEN")
+MY_TOKEN = os.getenv("MY_TOKEN")
 REPO_NAME = os.getenv("GITHUB_REPOSITORY")
 PR_NUMBER = int(os.getenv("PR_NUMBER"))
 
 # Instanciar cliente de GitHub
-g = Github(GITHUB_TOKEN)
+g = Github(MY_TOKEN)
 repo = g.get_repo(REPO_NAME)
 pr = repo.get_pull(PR_NUMBER)
 
