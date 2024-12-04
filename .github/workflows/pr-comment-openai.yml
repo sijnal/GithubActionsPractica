@@ -22,7 +22,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install openai
+          pip install openai 
+          pip install PyGithub
 
       - name: Generate PR review with OpenAI
         env:
