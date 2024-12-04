@@ -1,0 +1,36 @@
+name: PR Comment with OpenAI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read  
+  pull-requests: write  
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install openai 
+          pip install PyGithub
+
+      - name: Generate PR review with OpenAI
+        env:
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+            python pr_review.py
+          
+      
