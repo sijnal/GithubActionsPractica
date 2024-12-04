@@ -1,43 +1,60 @@
-import openai
 import os
-import sys
 from github import Github
 
-# Configuración de OpenAI
-#openai.api_key = os.getenv("OPENAI_API_KEY")
+# Configuración del cliente de GitHub
+token = os.getenv("MY_TOKEN")
+repo_name = os.getenv("GITHUB_REPOSITORY")
+pr_number = int(os.getenv("PR_NUMBER"))
 
-# Configuración de GitHub
-MY_TOKEN = os.getenv("MY_TOKEN")
-REPO_NAME = os.getenv("GITHUB_REPOSITORY")
-PR_NUMBER = int(os.getenv("PR_NUMBER"))
+g = Github(token)
+repo = g.get_repo(repo_name)
+pr = repo.get_pull(pr_number)
 
-# Instanciar cliente de GitHub
-g = Github(MY_TOKEN)
-repo = g.get_repo(REPO_NAME)
-pr = repo.get_pull(PR_NUMBER)
+# Obtener título y descripción del PR
+pr_title = pr.title
+pr_body = pr.body
 
-# Obtener los cambios del PR
+print(pr_title)
+print(pr_body)
+print(pr_number)
+
+# Obtener los cambios de los archivos
 files = pr.get_files()
-changed_files = [file.filename for file in files]
 
-# Generar comentario con OpenAI
-def get_openai_comment(changed_files):
-    diff_text = "\n".join(changed_files)
-    prompt = f"Here are some code changes:\n{diff_text}\nPlease review and provide feedback on potential issues or areas of improvement."
+# Generar un análisis detallado
+comments = []
+comments.append(f"**Título del PR:** {pr_title}")
+comments.append(f"**Descripción del PR:**\n{pr_body if pr_body else 'Sin descripción.'}\n")
+comments.append("### Cambios identificados en los archivos:\n")
 
-    #response = openai.Completion.create(
-    #    engine="text-davinci-003",
-    #    prompt=prompt,
-    #    max_tokens=300
-    #)
+# Analizar cada archivo
+for file in files:
+    filename = file.filename
+    patch = file.patch  # El diff del archivo
 
-    return prompt
-    #return response.choices[0].text.strip()
+    if not patch:
+        comments.append(f"- `{filename}`: Sin cambios relevantes en el contenido (e.g., renombrado o cambio de permisos).")
+        continue
 
-# Comentar en el PR
-def post_comment(comment):
-    pr.create_issue_comment(comment)
+    comments.append(f"- **Archivo:** `{filename}`\n")
 
-if __name__ == "__main__":
-    comment = get_openai_comment(changed_files)
-    post_comment(comment)
+    # Analizar las líneas modificadas
+    added_lines = []
+    removed_lines = []
+    for line in patch.split("\n"):
+        if line.startswith("+") and not line.startswith("+++"):  # Líneas añadidas
+            added_lines.append(line[1:])
+        elif line.startswith("-") and not line.startswith("---"):  # Líneas eliminadas
+            removed_lines.append(line[1:])
+
+    # Resumir cambios
+    if added_lines:
+        comments.append(f"  - **Líneas añadidas:**\n    " + "\n    ".join(added_lines[:5]) + ("\n    ... (más líneas)" if len(added_lines) > 5 else ""))
+    if removed_lines:
+        comments.append(f"  - **Líneas eliminadas:**\n    " + "\n    ".join(removed_lines[:5]) + ("\n    ... (más líneas)" if len(removed_lines) > 5 else ""))
+
+# Publicar el comentario en el PR
+final_comment = "\n".join(comments)
+pr.create_issue_comment(final_comment)
+print("Comentario publicado exitosamente.")
+
