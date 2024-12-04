@@ -14,10 +14,6 @@ pr = repo.get_pull(pr_number)
 pr_title = pr.title
 pr_body = pr.body
 
-print(pr_title)
-print(pr_body)
-print(pr_number)
-
 # Obtener los cambios de los archivos
 files = pr.get_files()
 
@@ -49,9 +45,9 @@ for file in files:
 
     # Resumir cambios
     if added_lines:
-        comments.append(f"  - **Líneas añadidas:**\n    " + "\n    ".join(added_lines[:5]) + ("\n    ... (más líneas)" if len(added_lines) > 5 else ""))
+        comments.append(f"  - **Líneas añadidas:**\n    " + "\n    ".join(added_lines[:]))
     if removed_lines:
-        comments.append(f"  - **Líneas eliminadas:**\n    " + "\n    ".join(removed_lines[:5]) + ("\n    ... (más líneas)" if len(removed_lines) > 5 else ""))
+        comments.append(f"  - **Líneas eliminadas:**\n    " + "\n    ".join(removed_lines[:]))
 
 # Publicar el comentario en el PR
 final_comment = "\n".join(comments)

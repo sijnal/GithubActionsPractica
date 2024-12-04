@@ -1,2 +1,1 @@
-# GithubActionsPractica
-xddd
+Github Actions
