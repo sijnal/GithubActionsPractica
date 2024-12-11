@@ -1,20 +1,13 @@
-name: PR Comment with OpenAI
+name: Probando la API de Chat gpt
 run-name: ${{ github.actor }} está ejecutando este workflow
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-
-permissions:
-  contents: read  
-  pull-requests: write  
-
+    types: opened
 jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -23,16 +16,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests
-          pip install PyGithub
+          pip install openai
 
-      - name: Generate PR review with OpenAI
-        env:
-          MY_TOKEN: ${{ secrets.MY_TOKEN }}
-          GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
-          GOOGLE_AI_API_URL: ${{ secrets.GOOGLE_AI_API_URL }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Ejecución del programa
         run: |
           python pr_review.py
       
